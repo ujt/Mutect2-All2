@@ -1,0 +1,29 @@
+# Snakemake-generated files and logs
+.snakemake/
+*.log
+*.out
+*.err
+*.html
+
+# Output folders
+results/
+output/
+logs/
+
+# Bioinformatics data
+*.bam
+*.bai
+*.sam
+*.fastq
+*.fq
+*.gz
+*.vcf
+
+# Python
+__pycache__/
+*.pyc
+
+# Misc
+*.tmp
+*~
+*.backup

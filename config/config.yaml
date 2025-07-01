@@ -1,0 +1,100 @@
+# Mutect2 Snakemake Configuration
+# Clean configuration file without non-ASCII characters
+pair_list: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/00_Script/Mutect2_Snakemake_Batch21/config/sample_pairs.tsv"
+
+# Project profiles - uncomment the one you want to use
+project: "production"
+
+# Test configuration
+test:
+  directories:
+    input_dirs:
+      - "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/00_Script/Mutect2_Snakemake/test"
+    output_dir: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/02_Processeddata/1278_PTA/Mutect2/Neu_Myo_reseq_addseq_GanzOL/test"
+
+# Production configuration
+production:
+  directories:
+    input_dirs:
+      - "/pi/michael.lodato-umw/home/michael.lodato-umw/ganz_data"
+      - "/pi/michael.lodato-umw/Tianxiong/for_Waka/resequenced"
+      - "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/01_Rawdata/Cesar_MusclePJ/1st_seq"
+      - "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/01_Rawdata/Neu_Myo_scWGS_Nov2024/07_BAM_Snakemake_Run7/gatk"
+      - "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/01_Rawdata/Neu_Myo_scWGS_Nov2024/03_BAM/gatk"
+      - "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/01_Rawdata/Neu_Myo_scWGS_Nov2024/10_BAM_Snakemake_Run10/gatk"
+      - "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/01_Rawdata/Neu_Myo_scWGS_Nov2024/11_BAM_Snakemake_Run11/gatk"
+    output_dir: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/02_Processeddata/1278_PTA/Mutect2/Neu_Myo_reseq_addseq_GanzOL_Snakemake/Batch21"
+
+# Pre-executed contamination files configuration
+pre_executed:
+  use_pre_executed: true
+  file_list_path: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/00_Script/Mutect2_Snakemake_Batch21/config/contamination_files_list"
+
+# File patterns and filters
+file_patterns:
+  bam_filter: "1278"
+
+# Sample pair range
+sample_pair_range:
+  start: 609
+  end: 611
+
+# Reference files
+references:
+  genome: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/RefGenome/hs37d5.fa"
+  germline_resource: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/GermlineRef/af-only-gnomad.raw.sites.vcf"
+  panel_of_normals: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/PanelOfNormal/Mutect2-WGS-panel-b37.vcf"
+  small_exac_common_3: "/pi/michael.lodato-umw/home/waka.ujita-umw/miniconda3/CellLineage/SmallExacCommon3/small_exac_common_3.vcf"
+
+# Resource allocation - Optimized for parallel processing
+resources:
+  # CPU-intensive tasks (4 threads recommended)
+  mutect2:
+    mem_mb: 4200
+    threads: 4
+    runtime: 1440
+  
+  learn_read_orientation:
+    mem_mb: 2800
+    threads: 4
+    runtime: 720
+    
+  filter_mutect_calls:
+    mem_mb: 2800
+    threads: 4
+    runtime: 1440
+    
+  # I/O-intensive tasks (2 threads recommended)
+  merge_vcfs:
+    mem_mb: 500
+    threads: 2
+    runtime: 180
+  
+  merge_mutect_stats:
+    mem_mb: 300
+    threads: 2
+    runtime: 120
+  
+  # Lightweight processing tasks
+  merge_f1r2_files:
+    mem_mb: 300
+    threads: 1
+    runtime: 60
+  
+  # These resources are kept for compatibility but won't be used when pre_executed.use_pre_executed is true
+  get_pileup_summaries:
+    mem_mb: 2000
+    threads: 2
+    runtime: 480
+  
+  calculate_contamination:
+    mem_mb: 1000
+    threads: 1
+    runtime: 240
+
+# Cluster configuration for LSF
+cluster:
+  queue: "long"
+  mem: "16G"
+  span: "hosts=1"
+  walltime: "720:00"
